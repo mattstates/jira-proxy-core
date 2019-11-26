@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace jira_proxy_core
+namespace JiraProxyCore
 {
     public class Program
     {

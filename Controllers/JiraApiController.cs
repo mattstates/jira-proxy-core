@@ -1,18 +1,17 @@
+using System;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
-using System.Net.Http;
-using System.Net.Http.Headers;
 
-namespace jira_proxy_core.Controllers
+namespace JiraProxyCore.Controllers
 {
     [ApiController]
     [Route("/plugins/servlet/applinks/proxy/")]
-    [EnableCors("Jira-Proxy-Origins-Policy")]
+    //[EnableCors(JiraProxyOriginPolicy)]
     public class JiraApiController : ControllerBase
     {
         private readonly ILogger<JiraApiController> _logger;
@@ -36,21 +35,21 @@ namespace jira_proxy_core.Controllers
             var searchUrl = $"{queryCollection[_settings.Value.PathQueryParam]}&{String.Join("&", filteredKeys.Select(q => $"{q}={queryCollection[q]}").ToList())}";
 
             var result = await GetJiraData(searchUrl);
-            var content = await result.Content.ReadAsStringAsync();
-            
-            return Ok(content);
+
+            return Ok(result);
         }
 
-        public async Task<HttpResponseMessage> GetJiraData(string url)
+        public async Task<string> GetJiraData(string url)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Authorization = new AuthenticationHeaderValue("Basic", _settings.Value.ApiCredentials);
+            HttpResponseMessage response;
+            using (var client = _clientFactory.CreateClient())
+            {
+                response = await client.SendAsync(request);
+            }
 
-            var client = _clientFactory.CreateClient();
-
-            var response = await client.SendAsync(request);
-
-            return response;
+            return await response.Content.ReadAsStringAsync();
         }
     }
 }

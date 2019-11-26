@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <RootNamespace>JiraProxyCore</RootNamespace>
+    <AssemblyName>jira-proxy-core</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'jira_proxy_core' ">
+    <StartAction>Project</StartAction>
+    <ApplicationURL>http://localhost:3333</ApplicationURL>
+  </PropertyGroup>
+  <ItemGroup>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\ValuesController.cs" />
+    <Compile Remove="Controllers\Default.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Controllers\.DS_Store" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Constants\" />
+  </ItemGroup>
+</Project>

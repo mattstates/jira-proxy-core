@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using static JiraProxyCore.Constants.CorsPolicies;
 
-namespace jira_proxy_core
+namespace JiraProxyCore
 {
     public class Startup
     {
@@ -12,8 +13,6 @@ namespace jira_proxy_core
         {
             Configuration = configuration;
         }
-
-        readonly string JiraProxyOriginPolicy = "Jira-Proxy-Origins-Policy";
 
         public IConfiguration Configuration { get; }
 
@@ -23,6 +22,7 @@ namespace jira_proxy_core
             services.AddControllers();
             services.AddCors(options =>
             {
+                // Allow cors for everything since this is only used for development.
                 options.AddPolicy(JiraProxyOriginPolicy,
                 builder =>
                 {
@@ -42,10 +42,7 @@ namespace jira_proxy_core
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
- 
             }
-
-            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
